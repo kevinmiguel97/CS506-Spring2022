@@ -1,0 +1,3 @@
+[console_scripts]
+cs506 = cs506.cli:main
+
