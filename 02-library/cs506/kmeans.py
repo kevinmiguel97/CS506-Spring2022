@@ -11,7 +11,13 @@ def point_avg(points):
     
     Returns a new point which is the center of all the points.
     """
-    raise NotImplementedError()
+    x = 0
+    y = 0
+    for elem in points:
+        x += elem[0]
+        y += elem[1]
+    mean = [x / len(points), y / len(points)]
+    return mean
 
 
 def update_centers(dataset, assignments):
@@ -21,7 +27,17 @@ def update_centers(dataset, assignments):
     Compute the center for each of the assigned groups.
     Return `k` centers in a list
     """
-    raise NotImplementedError()
+    assignments_dict = {}
+    centers = []
+    for i in range(0, len(assignments)):
+        points = assignments_dict.get(assignments[i])
+        if points is None:
+            points = []
+        points.append(dataset[i])
+        assignments_dict.update({assignments[i]: points})
+    for p_list in sorted(assignments_dict.keys()):
+        centers.append(point_avg(assignments_dict[p_list]))
+    return centers
 
 def assign_points(data_points, centers):
     """
@@ -43,20 +59,29 @@ def distance(a, b):
     """
     Returns the Euclidean distance between a and b
     """
-    raise NotImplementedError()
+    return sim.euclidian_dist(a,b)
 
 def distance_squared(a, b):
-    raise NotImplementedError()
+    return distance(a,b) ** 2
 
 def generate_k(dataset, k):
     """
     Given `data_set`, which is an array of arrays,
     return a random set of k points from the data_set
     """
-    raise NotImplementedError()
+    points = []
+    for i in range(0, k):
+        rnd = random.randint(0, len(dataset) - 1)
+        points.append(dataset[rnd])
+    return points
 
 def cost_function(clustering):
-    raise NotImplementedError()
+    cost = 0
+    for center_id in clustering:
+        center = point_avg(clustering[center_id])
+        for point in clustering[center_id]:
+            cost += distance(center, point)
+    return cost
 
 
 def generate_k_pp(dataset, k):
@@ -66,7 +91,7 @@ def generate_k_pp(dataset, k):
     where points are picked with a probability proportional
     to their distance as per kmeans pp
     """
-    raise NotImplementedError()
+
 
 
 def _do_lloyds_algo(dataset, k_points):
